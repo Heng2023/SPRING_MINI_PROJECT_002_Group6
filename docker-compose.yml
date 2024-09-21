@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: postgres
+      DB_PASSWORD: qwas1234
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_STRICT: 'false'
+      KC_PROXY: 'edge'
+    ports:
+      - "8080:8080"  # Exposing HTTP
+      # Uncomment the following if you need HTTPS
+      # - "8443:8443"
+    depends_on:
+      - postgres
+    command:
+      - start-dev
+    networks:
+      - keycloak-network
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwas1234
+    ports:
+      - "5435:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - keycloak-network
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+
+  task-postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: task
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwas1234
+    ports:
+      - "5436:5432"
+    volumes:
+      - task_postgres_data:/var/lib/postgresql/data
+    networks:
+      - keycloak-network
+
+networks:
+  keycloak-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  task_postgres_data:

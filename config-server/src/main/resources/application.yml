@@ -1,0 +1,20 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: '{cipher}719ffad1e5563a1b9a4ea4bd2c5ac7e1cac95cd30859e99c1e31d94a42d6331883d8aba683673cf2d3e19deff027b49e658133f8efe90e81aaebf037bd3dadd3'
+          default-label: main
+
+encrypt:
+  key: sdjfhdsdjkfwei2383432493204320
+
+management:
+  tracing:
+    sampling:
+      probability: 0.5

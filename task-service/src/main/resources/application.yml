@@ -1,0 +1,55 @@
+#spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8080/realms/project
+#          jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
+#  application:
+#    name: task-service
+#
+#server:
+#  port: 8083
+#
+#keycloak:
+#  realm: project
+#  resource: keycloak
+#  auth-server-url: http://localhost:8080/
+#  credentials:
+#    username: admin
+#    password: admin
+#    client-id: keycloak
+#    secret: 9zDTopbhwUBDVK8jXhENjSiZC0ptOZUS
+#    provider: secret
+#
+#springdoc:
+#  swagger-ui:
+#    oauth:
+#      client-id: keycloak
+#      client-secret: 9zDTopbhwUBDVK8jXhENjSiZC0ptOZUS
+#      realm: project
+#    tags-sorter: alpha
+#  api-docs:
+#    path: /v3/api-docs/task-service-doc
+#
+#management:
+#  tracing:
+#    sampling:
+#      probability: 0.5
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+#  instance:
+#    prefer-ip-address: true
+#
+#logging:
+#  level:
+#    org.springframework.web: debug
+
+spring:
+  application:
+    name: task-service
+  config:
+    import: configserver:http://localhost:9090

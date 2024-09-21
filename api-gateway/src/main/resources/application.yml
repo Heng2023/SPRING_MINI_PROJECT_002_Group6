@@ -1,0 +1,66 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: configserver:http://localhost:9090
+
+#server:
+#  port: 8081  # Port for the API Gateway
+#
+#spring:
+#  application:
+#    name: api-gateway
+#  main:
+#    web-application-type: reactive  # API Gateway is reactive, so WebFlux is used
+#  cloud:
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true  # Automatically discover routes from Eureka
+#          lower-case-service-id: true  # Use lowercase service IDs for routes
+#      routes:
+#        - id: task-service
+#          uri: lb://task-service
+#          predicates:
+#            - Path=/api/v1/tasks/**
+#
+#        # Route for keycloak-admin-client API
+#        - id: keycloak-admin-client
+#          uri: lb://keycloak-admin-client  # Load-balancing URI using Eureka service discovery
+#          predicates:
+#            - Path=/v3/api-docs/keycloak-admin-client, /api/v1/**  # Route matching this path will be sent to the keycloak-admin-client service
+#
+#        # Route for task-service API
+#        - id: task-service-doc
+#          uri: lb://task-service  # Load-balancing URI using Eureka service discovery
+#          predicates:
+#            - Path=/v3/api-docs/task-service-doc
+#
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8080/realms/project  # Keycloak issuer URI for validating tokens
+#          jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs  # Keycloak JWK set URI to fetch public keys for token validation
+#
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/  # Eureka discovery URL
+#  instance:
+#    prefer-ip-address: true
+#
+#management:
+#  tracing:
+#    sampling:
+#      probability: 0.5  # 50% trace sampling for distributed tracing
+#
+#springdoc:
+#  api-docs:
+#    path: /v3/api-docs
+#  swagger-ui:
+#    path: /swagger-ui/index.html  # Swagger UI path at the gateway level
+#
+#logging:
+#  level:
+#    org.springframework.web: debug  # Enable debug logging for web requests
