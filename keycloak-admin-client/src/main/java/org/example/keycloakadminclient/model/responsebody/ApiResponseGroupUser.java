@@ -1,7 +1,7 @@
 package org.example.keycloakadminclient.model.responsebody;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -11,10 +11,10 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class ApiResponse<T>{
+public class ApiResponseGroupUser<T> {
     private String message;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer code;
     private T payload;
     private HttpStatus status;
-    private LocalDateTime dateTime;
+    private LocalDateTime timestamp;
 }
