@@ -1,51 +1,54 @@
-spring:
-  application:
-    name: keycloak-admin-client
-  config:
-    import: configserver:http://localhost:9090
-
 #spring:
-#  security:
-#    oauth2:
-#      resourceserver:
-#        jwt:
-#          issuer-uri: http://localhost:8080/realms/project
-#          jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
 #  application:
 #    name: keycloak-admin-client
-#
-#server:
-#  port: 8082
-#
-#keycloak:
-#  realm: project
-#  resource: keycloak
-#  auth-server-url: http://localhost:8080/
-#  credentials:
-#    username: admin
-#    password: 123
-#    client-id: keycloak
-#    secret: 9zDTopbhwUBDVK8jXhENjSiZC0ptOZUS
-#    provider: secret
-#
-#springdoc:
-#  swagger-ui:
-#    oauth:
-#      client-id: keycloak
-#      client-secret: 9zDTopbhwUBDVK8jXhENjSiZC0ptOZUS
-#      realm: project
-#  api-docs:
-#    path: /v3/api-docs/keycloak-admin-client
-#
-#keycloak-admin:
-#  username: admin
-#  password: admin
-#
-#management:
-#  tracing:
-#    sampling:
-#      probability: 0.5
-#
+#  config:
+#    import: configserver:http://localhost:9090
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/project
+          jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
+  application:
+    name: keycloak-admin-client
+  cloud:
+    config:
+      import-check:
+        enabled: false
+server:
+  port: 8082
+
+keycloak:
+  realm: project
+  resource: keycloak
+  auth-server-url: http://localhost:8080/
+  credentials:
+    username: admin
+    password: 123
+    client-id: keycloak
+    secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
+    provider: secret
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: keycloak
+      client-secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
+      realm: project
+  api-docs:
+    path: /v3/api-docs/keycloak-admin-client
+
+keycloak-admin:
+  username: admin
+  password: admin
+
+management:
+  tracing:
+    sampling:
+      probability: 0.5
+
 #eureka:
 #  client:
 #    service-url:
@@ -53,6 +56,6 @@ spring:
 #  instance:
 #    prefer-ip-address: true
 #
-#logging:
-#  level:
-#    org.springframework.web: debug
+logging:
+  level:
+    org.springframework.web: debug

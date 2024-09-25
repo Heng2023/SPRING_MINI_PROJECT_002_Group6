@@ -40,7 +40,7 @@ public class TaskController {
     public ResponseEntity<ApiResponse<?>> updateTaskById(@PathVariable UUID taskId, TaskRequest taskRequest){
         ApiResponse<?> response = ApiResponse.builder()
                 .message("Success")
-                .payload(taskService.updateTaskById(taskId))
+                .payload(taskService.updateTaskById(taskId, taskRequest))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

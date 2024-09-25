@@ -2,6 +2,7 @@ package org.example.taskservice.service.serviceImp;
 
 import lombok.AllArgsConstructor;
 
+import org.example.taskservice.fiegn.FeignUserService;
 import org.example.taskservice.model.dto.request.TaskRequest;
 import org.example.taskservice.model.dto.response.GroupResponse;
 import org.example.taskservice.model.dto.response.TaskResponse;
@@ -10,94 +11,86 @@ import org.example.taskservice.model.entity.Task;
 import org.example.taskservice.repository.TaskRepository;
 import org.example.taskservice.service.TaskService;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class TaskServiceImp implements TaskService {
 
-    @Value("${keycloak.realm}")
-    private String realm;
-    private final Keycloak keycloak;
+    private final FeignUserService userService;
     private final TaskRepository taskRepository;
-
-    public TaskServiceImp(TaskRepository taskRepository, Keycloak keycloak) {
-        this.taskRepository = taskRepository;
-        this.keycloak = keycloak;
-    }
 
     @Override
     public TaskResponse getTaskById(UUID taskId) {
-        return null;
+        Task task = taskRepository.findById(taskId).get();
+
+        return task.toResponse(
+                userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
+                userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
+                new GroupResponse(UUID.randomUUID(),"Hello")
+        );
     }
 
     @Override
     public TaskResponse deleteTaskById(UUID taskId) {
+        taskRepository.deleteById(taskId);
         return null;
     }
 
     @Override
-    public TaskResponse updateTaskById(UUID taskId) {
-        return null;
+    public TaskResponse updateTaskById(UUID taskId, TaskRequest taskRequest) {
+        taskRepository.findById(taskId).ifPresent(task -> {
+            task.setTaskName(taskRequest.getTaskName());
+            task.setDescription(taskRequest.getDescription());
+            task.setCreatedBy(taskRequest.getCreatedBy());
+            task.setAssignedTo(taskRequest.getAssignedTo());
+            task.setLastUpdatedAt(LocalDate.now());
+        });
+        return getTaskById(taskId) ;
     }
 
     @Override
-    public TaskResponse getAllTasks(int pageNo, int pageSize, String sortBy, String sortDirection) {
-        return null;
+    public List<TaskResponse> getAllTasks(int pageNo, int pageSize, String sortBy, String sortDirection) {
+         List<Task> tasks = taskRepository.findAll(PageRequest.of(pageNo,pageSize,
+                Sort.Direction.valueOf(sortDirection.toString()),
+                String.valueOf(sortBy))).stream().toList();
+         List<TaskResponse> taskResponses = new ArrayList<>();
+         for (Task task : tasks) {
+             taskResponses.add(new TaskResponse(
+                     task.getId(),
+                     task.getTaskName(),
+                     task.getDescription(),
+                     userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
+                     userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
+                     new GroupResponse(UUID.randomUUID(),"Hello"),
+                     task.getCreatedAt(),
+                     task.getLastUpdatedAt()));
+         }
+        return taskResponses;
     }
 
     @Override
     public TaskResponse assignNewTask(TaskRequest taskRequest) {
         taskRequest.toTask(LocalDate.now(),LocalDate.now());
-//        Task task= taskRepository.save(taskRequest.toTask(LocalDate.now(),LocalDate.now()));
-
-//        return task.toResponse(
-//                getUserById(task.getCreatedBy().toString(),null),
-//                getUserById(task.getAssignedTo().toString(),null),
-//                getGroupById(task.getGroupId().toString())
-//
-//        );
-        System.err.println("Hi: "+realm);
-            getGroupById(taskRequest.getGroupId());
-//        System.out.println(getUserById("a",LocalDate.now()));
-        return null;
-    }
-
-
-
-    public UserResponse getUserById(String id, LocalDate lastModified) {
-        System.out.println("Hello: "+realm);
-        UserRepresentation userRepresentation = keycloak.realm(realm)
-                .users().get("4c0f730b-6d00-4705-a76b-aabbcd1e2770")
-                .toRepresentation();
-        System.err.println("Hello: "+userRepresentation.getFirstName());
-        return new UserResponse(
-                UUID.fromString(userRepresentation.getId()),
-                userRepresentation.getUsername(),
-                userRepresentation.getEmail(),
-                userRepresentation.getFirstName(),
-                userRepresentation.getLastName(),
-                Instant.ofEpochMilli(userRepresentation.getCreatedTimestamp())
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate(),
-                lastModified
+        Task task= taskRepository.save(taskRequest.toTask(LocalDate.now(),LocalDate.now()));
+        task.setCreatedAt(LocalDate.now());
+        task.setLastUpdatedAt(LocalDate.now());
+        return task.toResponse(
+                userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
+                userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
+                new GroupResponse(UUID.randomUUID(),"Hello")
         );
     }
-
-    public GroupResponse getGroupById(UUID groupId) {
-        GroupRepresentation groupRepresentation = keycloak.realm(realm)
-                .groups()
-                .group("f6fd2942-5798-46b2-b214-b33b66b51256")
-                .toRepresentation();
-        return new GroupResponse(UUID.fromString(groupRepresentation.getId()),groupRepresentation.getName());
-    }
-
 }

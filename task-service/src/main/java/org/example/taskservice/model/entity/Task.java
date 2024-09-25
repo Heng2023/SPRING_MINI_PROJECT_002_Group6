@@ -37,6 +37,13 @@ public class Task {
     private LocalDate lastUpdatedAt;
 
     public TaskResponse toResponse(UserResponse createdByUser, UserResponse assignedToUser, GroupResponse group) {
-       return new TaskResponse(this.id,this.taskName,this.description,createdByUser,assignedToUser,group);
+       return new TaskResponse(this.id,
+               this.taskName,
+               this.description,
+               createdByUser,
+               assignedToUser,
+               group,
+               this.createdAt,
+               this.lastUpdatedAt);
     }
 }

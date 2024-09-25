@@ -34,6 +34,10 @@ keycloak:
     secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
     provider: secret
 
+keycloak-admin:
+  username: admin
+  password: admin
+
 springdoc:
   swagger-ui:
     oauth:
