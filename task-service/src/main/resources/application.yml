@@ -53,12 +53,30 @@ management:
     sampling:
       probability: 0.5
 
+resilience4j.circuitbreaker:
+  instances:
+    keycloak-admin-client:   # Feign client name
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      failureRateThreshold: 50
+      waitDurationInOpenState: 3s  # time in ms
+      permittedNumberOfCallsInHalfOpenState: 3
+      minimumNumberOfCalls: 5
+      automaticTransitionFromOpenToHalfOpenEnabled: true
+
 #eureka:
 #  client:
 #    service-url:
 #      defaultZone: http://localhost:8761/eureka/
 #  instance:
 #    prefer-ip-address: true
+
+feign:
+  client:
+    config:
+      keycloak-admin-client:
+        connectTimeout: 5000
+        readTimeout: 5000
 
 logging:
   level:

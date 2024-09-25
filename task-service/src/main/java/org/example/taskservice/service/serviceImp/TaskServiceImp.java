@@ -12,6 +12,7 @@ import org.example.taskservice.repository.TaskRepository;
 import org.example.taskservice.service.TaskService;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
+import org.keycloak.admin.client.resource.GroupResource;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,11 +27,31 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class TaskServiceImp implements TaskService {
+
+
+   @Value("${keycloak.auth-server-url}")
+    private String keycloakServerUrl;
+
+    @Value("${keycloak.realm}")
+    private String keycloakRealm;
+
+    @Value("${keycloak-admin.username}")
+    private String keycloakAdminUsername;
+
+    @Value("${keycloak-admin.password}")
+    private String keycloakAdminPassword;
+
+    private final Keycloak keycloakAdminClient;
 
     private final FeignUserService userService;
     private final TaskRepository taskRepository;
+
+    public TaskServiceImp(Keycloak keycloakAdminClient, FeignUserService userService, TaskRepository taskRepository) {
+        this.keycloakAdminClient = keycloakAdminClient;
+        this.userService = userService;
+        this.taskRepository = taskRepository;
+    }
 
     @Override
     public TaskResponse getTaskById(UUID taskId) {
@@ -39,7 +60,8 @@ public class TaskServiceImp implements TaskService {
         return task.toResponse(
                 userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                 userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
-                new GroupResponse(UUID.randomUUID(),"Hello")
+                null
+//                getGroupById(task.getGroupId())
         );
     }
 
@@ -74,7 +96,8 @@ public class TaskServiceImp implements TaskService {
                      task.getDescription(),
                      userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                      userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
-                     new GroupResponse(UUID.randomUUID(),"Hello"),
+                     null,
+//                     getGroupById(task.getGroupId()),
                      task.getCreatedAt(),
                      task.getLastUpdatedAt()));
          }
@@ -90,7 +113,22 @@ public class TaskServiceImp implements TaskService {
         return task.toResponse(
                 userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                 userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
-                new GroupResponse(UUID.randomUUID(),"Hello")
+//                null
+              getGroupById(task.getGroupId())
         );
     }
+
+    public GroupResponse getGroupById(UUID groupId) {
+        // Retrieve group by ID from Keycloak
+        GroupRepresentation groupRepresentation = keycloakAdminClient
+                .realm(keycloakRealm)
+                .groups()
+                .group(groupId.toString())
+                .toRepresentation();
+
+        // Convert GroupRepresentation to your custom GroupResponse
+        return new GroupResponse(UUID.fromString(groupRepresentation.getId()), groupRepresentation.getName());
+
+    }
+
 }

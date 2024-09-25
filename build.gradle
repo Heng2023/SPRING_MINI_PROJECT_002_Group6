@@ -84,6 +84,20 @@ subprojects {
             implementation 'org.springframework.boot:spring-boot-starter-security'
             implementation 'org.springframework.security:spring-security-oauth2-resource-server'
             implementation 'org.springframework.security:spring-security-oauth2-jose'
+
+            // Feign dependencies
+            implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+            // Resilience4j for CircuitBreaker integration
+            implementation 'io.github.resilience4j:resilience4j-spring-boot3'
+            implementation 'io.github.resilience4j:resilience4j-circuitbreaker'
+
+            // Optional: Resilience4j for retry mechanisms
+            implementation 'io.github.resilience4j:resilience4j-retry'
+
+            // Optional: Spring Boot actuator for monitoring
+            implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
         }
 
         if (project.name == "eureka-server") {

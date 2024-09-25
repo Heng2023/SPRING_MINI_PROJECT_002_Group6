@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,14 +22,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig  {
-
-    @Bean
-    public GrantedAuthoritiesMapper grantedAuthoritiesMapper() {
-        SimpleAuthorityMapper mapper = new SimpleAuthorityMapper();
-        mapper.setConvertToUpperCase(true); // Ensure roles are uppercase (KEYCLOAK_DEFAULT_ROLES)
-        return mapper;
-    }
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,5 +40,6 @@ public class SecurityConfig  {
                 );
         return http.build();
     }
+
 }
 

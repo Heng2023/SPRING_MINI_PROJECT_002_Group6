@@ -23,15 +23,15 @@ public class TaskController {
     @GetMapping("{taskId}")
     public ResponseEntity<ApiResponse<?>> getTaskById(@PathVariable UUID taskId) {
         ApiResponse<?> response = ApiResponse.builder()
-                .message("Success")
+                .message("Task get successfully")
                 .payload(taskService.getTaskById(taskId))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @DeleteMapping("{taskId}")
-    public ResponseEntity<ApiResponse<?>> helloWorld(@PathVariable UUID taskId){
+    public ResponseEntity<ApiResponse<?>> deleteTaskById(@PathVariable UUID taskId){
         ApiResponse<?> response = ApiResponse.builder()
-                .message("Success")
+                .message("Delete task successfully")
                 .payload(taskService.deleteTaskById(taskId))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -39,7 +39,7 @@ public class TaskController {
     @PutMapping("{taskId}")
     public ResponseEntity<ApiResponse<?>> updateTaskById(@PathVariable UUID taskId, TaskRequest taskRequest){
         ApiResponse<?> response = ApiResponse.builder()
-                .message("Success")
+                .message("Task update successfully")
                 .payload(taskService.updateTaskById(taskId, taskRequest))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -47,7 +47,7 @@ public class TaskController {
     @GetMapping("")
     public ResponseEntity<ApiResponse<?>> getAllTasks(int pageNo, int pageSize, String sortBy, String sortDirection){
         ApiResponse<?> response = ApiResponse.builder()
-                .message("Success")
+                .message("All tasks are found")
                 .payload(taskService.getAllTasks(pageNo,pageSize,sortBy,sortDirection))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -55,7 +55,7 @@ public class TaskController {
     @PostMapping("")
     public ResponseEntity<ApiResponse<?>> createTask(@RequestBody TaskRequest taskRequest){
         ApiResponse<?> response = ApiResponse.builder()
-                .message("Success")
+                .message("Task was created successfully")
                 .payload(taskService.assignNewTask(taskRequest))
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
