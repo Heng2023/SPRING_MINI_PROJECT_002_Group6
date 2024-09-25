@@ -1,5 +1,6 @@
 package org.example.keycloakadminclient.model.responsebody;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class UserResponse {
     private String firstName;
     private String lastName;
     private LocalDateTime createdAt;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private LocalDateTime lastModified;
 }
 
