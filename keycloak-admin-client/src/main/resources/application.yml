@@ -13,10 +13,7 @@ spring:
           jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
   application:
     name: keycloak-admin-client
-  cloud:
-    config:
-      import-check:
-        enabled: false
+
 server:
   port: 8082
 
@@ -28,14 +25,14 @@ keycloak:
     username: admin
     password: 123
     client-id: keycloak
-    secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
+    secret: zExlJe80OfllCM7VxghKLClmxJyQifHcS
     provider: secret
 
 springdoc:
   swagger-ui:
     oauth:
       client-id: keycloak
-      client-secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
+      client-secret: zExlJe80OfllCM7VxghKLClmxJyQifHc
       realm: project
   api-docs:
     path: /v3/api-docs/keycloak-admin-client
@@ -49,13 +46,13 @@ management:
     sampling:
       probability: 0.5
 
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka/
-#  instance:
-#    prefer-ip-address: true
-#
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
 logging:
   level:
     org.springframework.web: debug
