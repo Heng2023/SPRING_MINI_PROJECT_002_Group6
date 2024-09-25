@@ -4,9 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.example.keycloakadminclient.model.requestbody.GroupRequest;
 import org.example.keycloakadminclient.model.responsebody.ApiResponse;
-import org.example.keycloakadminclient.model.responsebody.GroupResponse;
 import org.example.keycloakadminclient.service.GroupService;
-import org.keycloak.representations.idm.GroupRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +22,7 @@ public class GroupController {
 
     private final GroupService groupService;
 
+    //create group
     @PostMapping
     public ResponseEntity<?> createGroup(@RequestBody GroupRequest groupRequest) {
         ApiResponse<Object> apiResponse = ApiResponse
@@ -36,6 +35,7 @@ public class GroupController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    //get all groups
     @GetMapping
     public ResponseEntity<List<?>> getAllGroups() {
         ApiResponse<Object> apiResponse = ApiResponse
@@ -48,6 +48,7 @@ public class GroupController {
         return ResponseEntity.ok(Collections.singletonList(apiResponse));
     }
 
+    // add user to group
     @PostMapping("/{groupId}/users/{userId}")
     public ResponseEntity<ApiResponse<Object>> addUserToGroup(@PathVariable UUID groupId, @PathVariable UUID userId ) {
         ApiResponse<Object> apiResponse = ApiResponse
@@ -60,6 +61,7 @@ public class GroupController {
         return ResponseEntity.ok(apiResponse);
     }
 
+    // find users by group id
     @GetMapping("/{groupId}/users")
     public ResponseEntity<List<?>> getAllUsersByGroups(@PathVariable UUID groupId) {
         ApiResponse<Object> apiResponse = ApiResponse
@@ -71,7 +73,5 @@ public class GroupController {
                 .build();
         return ResponseEntity.ok(Collections.singletonList(apiResponse));
     }
-
-
 
 }

@@ -59,8 +59,8 @@ public class GroupService {
 
             // Debugging: Fetch all groups to verify
             List<GroupRepresentation> groups = keycloakAdminClient.realm(keycloakRealm).groups().groups();
-            groups.forEach(group -> logger.info("Group: {}", group.getId()));
-            groups.forEach(group -> logger.info("Group: {}", group.getName()));
+            groups.forEach(group -> logger.info("Group id: {}", group.getId()));
+            groups.forEach(group -> logger.info("Group name: {}", group.getName()));
 
         } catch (Exception e) {
             logger.error("Error creating group in Keycloak", e);
@@ -81,6 +81,7 @@ public class GroupService {
            logger.info("Fetch " + groups.size() + " groups from Keycloak");
            groups.forEach(group -> logger.info("Group: {}", group.getName()));
            return groups;
+
        }catch (Exception e) {
            logger.error("Error getting groups in Keycloak", e);
            throw new RuntimeException("Failed getting groups in Keycloak", e);
@@ -91,24 +92,24 @@ public class GroupService {
     public GroupRepresentation addUserToGroup(UUID groupId, UUID userId) {
         try {
             UsersResource usersResource = keycloakAdminClient.realm(keycloakRealm).users();
-            UserResource userResource = usersResource.get(String.valueOf(userId));
+            UserResource userResource = usersResource.get(userId.toString());
 
             if (userResource == null) {
                 throw new RuntimeException("User with Id: " + userId + " not found");
             }
 
-            GroupRepresentation group = keycloakAdminClient.realm(keycloakRealm).groups().group(String.valueOf(groupId)).toRepresentation();
+            GroupRepresentation group = keycloakAdminClient.realm(keycloakRealm).groups().group(groupId.toString()).toRepresentation();
 
             if (group == null) {
                 throw new RuntimeException("Group with Id: " + groupId + " not found");
             }
 
             // Add user to the group using groupId
-            userResource.joinGroup(String.valueOf(groupId));
+            userResource.joinGroup(groupId.toString());
             logger.info("User with ID {} successfully added to group {} ", userId, group.getName());
 
             Group groups = new Group();
-            groups.setGroupId(UUID.fromString(String.valueOf(groupId)));
+            groups.setGroupId(UUID.fromString(groupId.toString()));
             return group;
 
         } catch (Exception e) {
@@ -120,7 +121,7 @@ public class GroupService {
     // Get user by group ID from keycloak
     public List<UserRepresentation> getUserByGroupId(UUID groupId) {
         try {
-            GroupResource groupResource = (GroupResource) keycloakAdminClient.realm(keycloakRealm).groups().group(groupId.toString());
+            GroupResource groupResource = keycloakAdminClient.realm(keycloakRealm).groups().group(groupId.toString());
 
             List<UserRepresentation> users = groupResource.members();
             logger.info("Found {} users in group with id {} ", users.size(), groupId);
