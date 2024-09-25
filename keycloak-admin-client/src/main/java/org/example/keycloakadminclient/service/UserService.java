@@ -128,7 +128,7 @@ public class UserService {
     public ApiResponse<?> deleteUser(UUID userId) {
         try (Keycloak keycloak = buildKeycloakInstance()) {
             keycloak.realm(keycloakRealm).users().get(userId.toString()).remove();
-            return new ApiResponse<>("User deleted successfully", null, HttpStatus.NO_CONTENT, LocalDateTime.now());
+            return new ApiResponse<>("User deleted successfully", null, HttpStatus.OK, LocalDateTime.now());
         } catch (NotFoundException e) {
             logger.error("User not found: {}", e.getMessage());
             return new ApiResponse<>("User not found", null, HttpStatus.NOT_FOUND, LocalDateTime.now());
