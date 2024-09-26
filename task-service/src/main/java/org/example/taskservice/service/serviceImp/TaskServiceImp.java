@@ -124,15 +124,19 @@ public class TaskServiceImp implements TaskService {
     public GroupResponse getGroupById(UUID groupId) {
         RealmResource realmResource = keycloakAdminClient.realm(keycloakRealm);
         GroupsResource groupResource = realmResource.groups();
-        List<GroupRepresentation> groupRepresentationList= groupResource.groups().stream().filter(e-> e.getId().equals(groupId)).toList();
+        List<GroupRepresentation> groups = groupResource.groups();
 
-        Optional<GroupRepresentation> groupRepresentation = groupResource.groups().stream()
-                .filter(e -> e.getId().equals(groupId.toString()))  // Filter by groupId
-                .findFirst();  // Find the first match, if any
-        groupRepresentation.get();
-        System.out.println("Id:"+groupRepresentation.get().getId());
-        System.out.println("Name:"+groupRepresentation.get().getName());
+//        List<GroupRepresentation> groupRepresentationList= groupResource.groups().stream().filter(e-> e.getId().equals(groupId)).toList();
+//        Optional<GroupRepresentation> groupRepresentation = groupResource.groups().stream()
+//                .filter(e -> e.getId().equals(groupId.toString()))  // Filter by groupId
+//                .findFirst();  // Find the first match, if any
+//        groupRepresentation.get();
+//        System.out.println("Id:"+groupRepresentation.get().getId());
+//        System.out.println("Name:"+groupRepresentation.get().getName());
                return null;
     }
+
+
+
 
 }

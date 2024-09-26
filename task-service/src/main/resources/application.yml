@@ -7,6 +7,7 @@ spring:
           jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
   application:
     name: task-service
+
   datasource:
     username: postgres
     password: qwas1234
@@ -44,7 +45,6 @@ springdoc:
       client-id: keycloak
       client-secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
       realm: project
-    tags-sorter: alpha
   api-docs:
     path: /v3/api-docs/task-service-doc
 
@@ -71,12 +71,6 @@ resilience4j.circuitbreaker:
 #  instance:
 #    prefer-ip-address: true
 
-feign:
-  client:
-    config:
-      keycloak-admin-client:
-        connectTimeout: 5000
-        readTimeout: 5000
 
 logging:
   level:

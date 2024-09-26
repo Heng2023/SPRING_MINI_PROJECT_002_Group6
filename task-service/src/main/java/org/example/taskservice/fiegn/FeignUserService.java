@@ -3,6 +3,7 @@ package org.example.taskservice.fiegn;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.example.taskservice.config.FeignClientInterceptor;
 import org.example.taskservice.model.dto.response.ApiResponse;
+import org.example.taskservice.model.dto.response.UserGroupResponse;
 import org.example.taskservice.model.dto.response.UserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +35,8 @@ public interface FeignUserService {
                         .message("Service is temporarily unavailable. Please try again later.")
                         .payload(userResponse).build());
     }
+
+    @GetMapping("/api/v1/group/{groupId}/users")
+    ResponseEntity<ApiResponse<UserGroupResponse>> getAllUsersByGroups(@PathVariable UUID groupId);
 
 }
