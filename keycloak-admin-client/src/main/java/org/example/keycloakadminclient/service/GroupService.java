@@ -18,34 +18,6 @@ import static org.example.keycloakadminclient.util.GroupMapper.mapToGroup;
 @Service
 
 public class GroupService {
-
-//    @Value("${keycloak-admin.username}")
-//    private String keycloakAdminUsername;
-//
-//    @Value("${keycloak-admin.password}")
-//    private String keycloakAdminPassword;
-//    private Keycloak buildKeycloakInstance() {
-//        return KeycloakBuilder.builder()
-//                .serverUrl(keycloakServerUrl)
-//                .realm(keycloakRealm)
-//                .clientId(keycloakResource)
-//                .clientSecret(secretKey)
-////                .username(keycloakAdminUsername)
-////                .password(keycloakAdminPassword)
-//                .build();
-//    }
-    //    @PostConstruct
-//    public void init() {
-//        keycloakAdminClient = KeycloakBuilder.builder()
-//                .serverUrl(keycloakServerUrl)
-//                .realm(keycloakRealm) // Consider using "keycloakRealm" if appropriate
-//                .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
-//                .clientId(keycloakResource)
-//                .clientSecret(secretKey)
-////                .username(keycloakAdminUsername)
-////                .password(keycloakAdminPassword)
-//                .build();
-//    }
 private static final Logger logger = LoggerFactory.getLogger(GroupService.class);
 
     @Value("${keycloak.auth-server-url}")
