@@ -37,20 +37,26 @@ public class UserService {
     @Value("${keycloak.realm}")
     private String keycloakRealm;
 
-    @Value("${keycloak-admin.username}")
-    private String keycloakAdminUsername;
+    @Value("${keycloak.resource}}")
+    private String keycloakResource;
 
-    @Value("${keycloak-admin.password}")
-    private String keycloakAdminPassword;
+    @Value("${keycloak.credentials.secret}")
+    private String secretKey;
+
+//    @Value("${keycloak-admin.username}")
+//    private String keycloakAdminUsername;
+//
+//    @Value("${keycloak-admin.password}")
+//    private String keycloakAdminPassword;
 
     // Build Keycloak instance for reuse
     private Keycloak buildKeycloakInstance() {
         return KeycloakBuilder.builder()
                 .serverUrl(keycloakServerUrl)
-                .realm("master")
-                .clientId("admin-cli")
-                .username(keycloakAdminUsername)
-                .password(keycloakAdminPassword)
+                .realm(keycloakResource)
+                .clientId(secretKey)
+//                .username(keycloakAdminUsername)
+//                .password(keycloakAdminPassword)
                 .build();
     }
 

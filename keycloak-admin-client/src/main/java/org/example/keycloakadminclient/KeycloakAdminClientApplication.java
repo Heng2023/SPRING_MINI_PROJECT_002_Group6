@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         type = SecuritySchemeType.OAUTH2,
         flows = @OAuthFlows(
                 clientCredentials = @OAuthFlow(
-                        tokenUrl = "http://localhost:8080/realms/project/protocol/openid-connect/token"
+                        tokenUrl = "http://localhost:8080/realms/mini-project/protocol/openid-connect/token"
                 )
         )
 )
