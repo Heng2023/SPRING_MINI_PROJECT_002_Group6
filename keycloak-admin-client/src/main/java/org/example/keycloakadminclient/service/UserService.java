@@ -74,12 +74,30 @@ public class UserService {
             logger.info("Keycloak response status: {}", response.getStatus());
 
             if (response.getStatus() == 201) {
-                UUID userId = UUID.randomUUID();
-                LocalDateTime now = LocalDateTime.now();
-                User newUser = new User(userId, username, null, email, firstName, lastName, now, now);
-                UserResponse userResponse = UserMapper.toUserResponse(newUser);
+                // Extract the UUID from the Location header in the Keycloak response
+                String locationHeader = response.getHeaderString("Location");
+                if (locationHeader != null) {
+                    // Keycloak returns the user ID as part of the URL, we need to extract it
+                    String userId = locationHeader.substring(locationHeader.lastIndexOf("/") + 1);
 
-                return new ApiResponse<>("User created successfully", userResponse, HttpStatus.CREATED, LocalDateTime.now());
+                    LocalDateTime now = LocalDateTime.now();
+                    User newUser = new User(
+                            UUID.fromString(userId),  // Use Keycloak's UUID
+                            username,
+                            null, // Password should not be returned
+                            email,
+                            firstName,
+                            lastName,
+                            now,
+                            null  // lastModified is null for newly created users
+                    );
+                    UserResponse userResponse = UserMapper.toUserResponse(newUser);
+
+                    return new ApiResponse<>("User created successfully", userResponse, HttpStatus.CREATED, LocalDateTime.now());
+                } else {
+                    logger.error("Location header is missing in the Keycloak response");
+                    return new ApiResponse<>("Failed to create user", null, HttpStatus.INTERNAL_SERVER_ERROR, LocalDateTime.now());
+                }
             } else {
                 logger.error("Failed to create user: {}", response.readEntity(String.class));
                 return new ApiResponse<>("Failed to create user", null, HttpStatus.valueOf(response.getStatus()), LocalDateTime.now());
@@ -144,12 +162,20 @@ public class UserService {
                 return new ApiResponse<>("User not found", null, HttpStatus.NOT_FOUND, LocalDateTime.now());
             }
 
+            // Update user details
             updateUserDetails(userRepresentation, updatedUser);
+
+            // Set or update the lastModified attribute
+            LocalDateTime now = LocalDateTime.now();
+            userRepresentation.singleAttribute("lastModified", now.toString()); // Set lastModified to current time
+
             userResource.update(userRepresentation);
 
+            // Map the user to the domain model
             User user = mapToUser(userRepresentation);
-            UserResponse userResponse = UserMapper.toUserResponse(user);
+            user.setLastModified(now);  // Set lastModified time in User model
 
+            UserResponse userResponse = UserMapper.toUserResponse(user);
             return new ApiResponse<>("User updated successfully", userResponse, HttpStatus.OK, LocalDateTime.now());
 
         } catch (NotFoundException e) {
