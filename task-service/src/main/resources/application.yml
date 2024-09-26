@@ -20,7 +20,11 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-#
+
+  cloud:
+    config:
+      enabled: false
+
 server:
   port: 8083
 
@@ -70,6 +74,7 @@ resilience4j.circuitbreaker:
 #      defaultZone: http://localhost:8761/eureka/
 #  instance:
 #    prefer-ip-address: true
+
 
 
 logging:
