@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDate;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -37,6 +36,15 @@ public interface FeignUserService {
     }
 
     @GetMapping("/api/v1/group/{groupId}/users")
+    @CircuitBreaker(name = "keycloak-admin-client-2", fallbackMethod = "fallback")
     ResponseEntity<ApiResponse<UserGroupResponse>> getAllUsersByGroups(@PathVariable UUID groupId);
-
+    default ResponseEntity<ApiResponse<UserGroupResponse>>fallback(String id, Throwable throwable) {
+        UserResponse userResponse = new UserResponse(UUID.fromString(id),"SunMario",
+                "thy.sopheak098@gmail.com",
+                "Sopheak",
+                "Thy",
+                LocalDate.now(),
+                LocalDate.now());
+        return null;
+    }
 }

@@ -1,24 +1,15 @@
 package org.example.taskservice.service.serviceImp;
 
-import lombok.AllArgsConstructor;
-
 import org.example.taskservice.fiegn.FeignUserService;
 import org.example.taskservice.model.dto.request.TaskRequest;
 import org.example.taskservice.model.dto.response.GroupResponse;
 import org.example.taskservice.model.dto.response.TaskResponse;
-import org.example.taskservice.model.dto.response.UserResponse;
+import org.example.taskservice.model.dto.response.UserGroupResponse;
 import org.example.taskservice.model.entity.Task;
 import org.example.taskservice.repository.TaskRepository;
 import org.example.taskservice.service.TaskService;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.admin.client.resource.GroupResource;
-import org.keycloak.admin.client.resource.GroupsResource;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.representations.idm.GroupRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -26,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -45,13 +35,13 @@ public class TaskServiceImp implements TaskService {
     @Value("${keycloak-admin.password}")
     private String keycloakAdminPassword;
 
-    private final Keycloak keycloakAdminClient;
+
 
     private final FeignUserService userService;
     private final TaskRepository taskRepository;
 
     public TaskServiceImp(Keycloak keycloakAdminClient, FeignUserService userService, TaskRepository taskRepository) {
-        this.keycloakAdminClient = keycloakAdminClient;
+
         this.userService = userService;
         this.taskRepository = taskRepository;
     }
@@ -63,8 +53,7 @@ public class TaskServiceImp implements TaskService {
         return task.toResponse(
                 userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                 userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
-                null
-//                getGroupById(task.getGroupId())
+                groupResponseById(task.getGroupId())
         );
     }
 
@@ -99,8 +88,7 @@ public class TaskServiceImp implements TaskService {
                      task.getDescription(),
                      userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                      userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
-                     null,
-//                     getGroupById(task.getGroupId()),
+                     groupResponseById(task.getGroupId()),
                      task.getCreatedAt(),
                      task.getLastUpdatedAt()));
          }
@@ -116,27 +104,14 @@ public class TaskServiceImp implements TaskService {
         return task.toResponse(
                 userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                 userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
-                null
-//              getGroupById(task.getGroupId())
+                groupResponseById(taskRequest.getGroupId())
         );
     }
 
-//    public GroupResponse getGroupById(UUID groupId) {
-//        RealmResource realmResource = keycloakAdminClient.realm(keycloakRealm);
-//        GroupsResource groupResource = realmResource.groups();
-//        List<GroupRepresentation> groups = groupResource.groups();
-//
-////        List<GroupRepresentation> groupRepresentationList= groupResource.groups().stream().filter(e-> e.getId().equals(groupId)).toList();
-////        Optional<GroupRepresentation> groupRepresentation = groupResource.groups().stream()
-////                .filter(e -> e.getId().equals(groupId.toString()))  // Filter by groupId
-////                .findFirst();  // Find the first match, if any
-////        groupRepresentation.get();
-////        System.out.println("Id:"+groupRepresentation.get().getId());
-////        System.out.println("Name:"+groupRepresentation.get().getName());
-//               return null;
-//    }
 
-
-
+    public GroupResponse groupResponseById(UUID taskId) {
+       UserGroupResponse userGroupResponse = userService.getAllUsersByGroups(taskId).getBody().getPayload();
+       return new GroupResponse(userGroupResponse.getGroupId(),userGroupResponse.getGroupName());
+    }
 
 }

@@ -2,7 +2,6 @@ package org.example.taskservice.service;
 
 import org.example.taskservice.model.dto.request.TaskRequest;
 import org.example.taskservice.model.dto.response.TaskResponse;
-import org.example.taskservice.model.dto.response.UserResponse;
 
 import java.util.List;
 import java.util.UUID;

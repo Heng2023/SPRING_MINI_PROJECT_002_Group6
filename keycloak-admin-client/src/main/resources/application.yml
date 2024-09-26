@@ -25,14 +25,14 @@ keycloak:
     username: admin
     password: admin
     client-id: keycloak
-    secret: zExlJe80OfllCM7VxghKLClmxJyQifHc
+    secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
     provider: secret
 
 springdoc:
   swagger-ui:
     oauth:
       client-id: keycloak
-      client-secret: zExlJe80OfllCM7VxghKLClmxJyQifHc
+      client-secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
       realm: project
   api-docs:
     path: /v3/api-docs/keycloak-admin-client
