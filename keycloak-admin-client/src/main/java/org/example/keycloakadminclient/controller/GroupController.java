@@ -50,28 +50,16 @@ public class GroupController {
 
     // add user to group
     @PostMapping("/{groupId}/users/{userId}")
-    public ResponseEntity<ApiResponse<Object>> addUserToGroup(@PathVariable UUID groupId, @PathVariable UUID userId ) {
-        ApiResponse<Object> apiResponse = ApiResponse
-                .builder()
-                .message("Add user to group successfully")
-                .payload(groupService.addUserToGroup(groupId, userId))
-                .status(HttpStatus.OK)
-                .dateTime(LocalDateTime.now())
-                .build();
-        return ResponseEntity.ok(apiResponse);
+    public ResponseEntity<?> addUserToGroup(@PathVariable UUID groupId, @PathVariable UUID userId ) {
+        return ResponseEntity.ok(new ApiResponse<>("Assign user " + userId +" to group " + groupId +" successfully "
+                ,groupService.addUserToGroup(groupId,userId),HttpStatus.OK,LocalDateTime.now()));
     }
 
     // find users by group id
     @GetMapping("/{groupId}/users")
-    public ResponseEntity<List<?>> getAllUsersByGroups(@PathVariable UUID groupId) {
-        ApiResponse<Object> apiResponse = ApiResponse
-                .builder()
-                .message("Get all users successfully")
-                .payload(groupService.getUserByGroupId(groupId))
-                .status(HttpStatus.OK)
-                .dateTime(LocalDateTime.now())
-                .build();
-        return ResponseEntity.ok(Collections.singletonList(apiResponse));
+    public ResponseEntity<?> getAllUsersByGroups(@PathVariable UUID groupId) {
+       return ResponseEntity.ok(new ApiResponse<>("Get user by group id " + groupId + " successfully",
+               groupService.getUserByGroupId(groupId),HttpStatus.OK,LocalDateTime.now()));
     }
 
 }

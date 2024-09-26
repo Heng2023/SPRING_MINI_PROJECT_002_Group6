@@ -2,9 +2,8 @@ package org.example.keycloakadminclient.model.responsebody;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import org.keycloak.representations.account.UserRepresentation;
-import org.keycloak.representations.idm.GroupRepresentation;
 
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -15,4 +14,6 @@ import java.util.UUID;
 public class GroupResponse {
    private UUID groupId;
    private String groupName;
+   @JsonInclude(JsonInclude.Include.NON_NULL)
+   private List<UserResponse> userList;
 }
