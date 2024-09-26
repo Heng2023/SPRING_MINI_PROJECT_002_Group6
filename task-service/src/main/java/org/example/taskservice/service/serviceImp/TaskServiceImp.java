@@ -13,6 +13,8 @@ import org.example.taskservice.service.TaskService;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.GroupResource;
+import org.keycloak.admin.client.resource.GroupsResource;
+import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -119,16 +122,17 @@ public class TaskServiceImp implements TaskService {
     }
 
     public GroupResponse getGroupById(UUID groupId) {
-        // Retrieve group by ID from Keycloak
-        GroupRepresentation groupRepresentation = keycloakAdminClient
-                .realm(keycloakRealm)
-                .groups()
-                .group(groupId.toString())
-                .toRepresentation();
+        RealmResource realmResource = keycloakAdminClient.realm(keycloakRealm);
+        GroupsResource groupResource = realmResource.groups();
+        List<GroupRepresentation> groupRepresentationList= groupResource.groups().stream().filter(e-> e.getId().equals(groupId)).toList();
 
-        // Convert GroupRepresentation to your custom GroupResponse
-        return new GroupResponse(UUID.fromString(groupRepresentation.getId()), groupRepresentation.getName());
-
+        Optional<GroupRepresentation> groupRepresentation = groupResource.groups().stream()
+                .filter(e -> e.getId().equals(groupId.toString()))  // Filter by groupId
+                .findFirst();  // Find the first match, if any
+        groupRepresentation.get();
+        System.out.println("Id:"+groupRepresentation.get().getId());
+        System.out.println("Name:"+groupRepresentation.get().getName());
+               return null;
     }
 
 }
