@@ -1,3 +1,9 @@
+spring:
+  application:
+    name: task-service
+  config:
+    import: configserver:http://localhost:9090
+
 #spring:
 #  security:
 #    oauth2:
@@ -7,6 +13,18 @@
 #          jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
 #  application:
 #    name: task-service
+#  datasource:
+#    username: postgres
+#    password: qwas1234
+#    url: jdbc:postgresql://localhost:5436/task
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
 #
 #server:
 #  port: 8083
@@ -37,6 +55,10 @@
 #    sampling:
 #      probability: 0.5
 #
+#keycloak-admin:
+#  username: admin
+#  password: admin
+#
 #eureka:
 #  client:
 #    service-url:
@@ -44,12 +66,17 @@
 #  instance:
 #    prefer-ip-address: true
 #
+#resilience4j.circuitbreaker:
+#  instances:
+#    keycloak-admin-client:   # Feign client name
+#      registerHealthIndicator: true
+#      slidingWindowSize: 10
+#      failureRateThreshold: 50
+#      waitDurationInOpenState: 3s  # time in ms
+#      permittedNumberOfCallsInHalfOpenState: 3
+#      minimumNumberOfCalls: 5
+#      automaticTransitionFromOpenToHalfOpenEnabled: true
+#
 #logging:
 #  level:
 #    org.springframework.web: debug
-
-spring:
-  application:
-    name: task-service
-  config:
-    import: configserver:http://localhost:9090

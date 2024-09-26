@@ -1,16 +1,63 @@
 package org.example.taskservice.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.example.taskservice.model.dto.request.TaskRequest;
+import org.example.taskservice.model.dto.response.ApiResponse;
+import org.example.taskservice.service.TaskService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/task")
 @SecurityRequirement(name = "spring-app")
 public class TaskController {
-    @GetMapping
-    public String helloWorld(){
-        return "Hello World";
+    private final TaskService taskService;
+
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
+
+    @GetMapping("{taskId}")
+    public ResponseEntity<ApiResponse<?>> getTaskById(@PathVariable UUID taskId) {
+        ApiResponse<?> response = ApiResponse.builder()
+                .message("Task get successfully")
+                .payload(taskService.getTaskById(taskId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @DeleteMapping("{taskId}")
+    public ResponseEntity<ApiResponse<?>> deleteTaskById(@PathVariable UUID taskId){
+        ApiResponse<?> response = ApiResponse.builder()
+                .message("Delete task successfully")
+                .payload(taskService.deleteTaskById(taskId))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @PutMapping("{taskId}")
+    public ResponseEntity<ApiResponse<?>> updateTaskById(@PathVariable UUID taskId, TaskRequest taskRequest){
+        ApiResponse<?> response = ApiResponse.builder()
+                .message("Task update successfully")
+                .payload(taskService.updateTaskById(taskId, taskRequest))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @GetMapping("")
+    public ResponseEntity<ApiResponse<?>> getAllTasks(int pageNo, int pageSize, String sortBy, String sortDirection){
+        ApiResponse<?> response = ApiResponse.builder()
+                .message("All tasks are found")
+                .payload(taskService.getAllTasks(pageNo,pageSize,sortBy,sortDirection))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+    @PostMapping("")
+    public ResponseEntity<ApiResponse<?>> createTask(@RequestBody TaskRequest taskRequest){
+        ApiResponse<?> response = ApiResponse.builder()
+                .message("Task was created successfully")
+                .payload(taskService.assignNewTask(taskRequest))
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
