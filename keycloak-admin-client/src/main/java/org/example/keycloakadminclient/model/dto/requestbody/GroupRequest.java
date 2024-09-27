@@ -1,4 +1,4 @@
-package org.example.keycloakadminclient.model.requestbody;
+package org.example.keycloakadminclient.model.dto.requestbody;
 
 import lombok.*;
 

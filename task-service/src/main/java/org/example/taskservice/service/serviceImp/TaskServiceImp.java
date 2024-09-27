@@ -22,8 +22,7 @@ import java.util.UUID;
 @Service
 public class TaskServiceImp implements TaskService {
 
-
-   @Value("${keycloak.auth-server-url}")
+    @Value("${keycloak.auth-server-url}")
     private String keycloakServerUrl;
 
     @Value("${keycloak.realm}")
@@ -34,8 +33,6 @@ public class TaskServiceImp implements TaskService {
 
     @Value("${keycloak-admin.password}")
     private String keycloakAdminPassword;
-
-
 
     private final FeignUserService userService;
     private final TaskRepository taskRepository;
@@ -66,6 +63,7 @@ public class TaskServiceImp implements TaskService {
     @Override
     public TaskResponse updateTaskById(UUID taskId, TaskRequest taskRequest) {
         taskRepository.findById(taskId).ifPresent(task -> {
+            task.setGroupId(taskRequest.getGroupId());
             task.setTaskName(taskRequest.getTaskName());
             task.setDescription(taskRequest.getDescription());
             task.setCreatedBy(taskRequest.getCreatedBy());
@@ -109,10 +107,8 @@ public class TaskServiceImp implements TaskService {
         );
     }
 
-
     public GroupResponse groupResponseById(UUID taskId) {
        UserGroupResponse userGroupResponse = userService.getAllUsersByGroups(taskId).getBody().getPayload();
        return new GroupResponse(userGroupResponse.getGroupId(),userGroupResponse.getGroupName());
     }
-
 }

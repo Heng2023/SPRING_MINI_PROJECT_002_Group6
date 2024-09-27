@@ -2,10 +2,11 @@ package org.example.keycloakadminclient.service;
 
 import jakarta.annotation.PostConstruct;
 import org.example.keycloakadminclient.model.Group;
-import org.example.keycloakadminclient.model.requestbody.GroupRequest;
-import org.example.keycloakadminclient.model.responsebody.GroupResponse;
-import org.example.keycloakadminclient.model.responsebody.UserGroupResponse;
-import org.example.keycloakadminclient.model.responsebody.UserResponse;
+import org.example.keycloakadminclient.model.dto.requestbody.GroupRequest;
+import org.example.keycloakadminclient.model.dto.responsebody.GroupResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.UserGroupResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.UserResponse;
+import org.example.keycloakadminclient.util.GroupMapper;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
@@ -20,10 +21,10 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
+
+import static org.example.keycloakadminclient.util.GroupMapper.mapToGroup;
 
 @Service
 public class GroupService {
@@ -182,5 +183,57 @@ public class GroupService {
         }
     }
 
+     public GroupResponse getGroupById(UUID groupId) {
+        try {
+            GroupRepresentation groupRepresentation = keycloakAdminClient.realm(keycloakRealm)
+                    .groups().group(String.valueOf(groupId)).toRepresentation();
 
+            if (groupRepresentation != null) {
+                logger.info("Found group with ID: {}", groupId);
+                Group group = mapToGroup(groupRepresentation);
+                return GroupMapper.toGroupResponse(group);
+            } else {
+                logger.warn("Group with ID: {} not found", groupId);
+                return null;
+            }
+        } catch (Exception e) {
+            logger.error("Error getting group by ID: {} in Keycloak", groupId, e);
+            throw new RuntimeException("Failed getting group by ID in Keycloak", e);
+        }
+    }
+
+    public GroupResponse updateGroupById(UUID groupId, GroupRequest updatedGroup ) {
+        try {
+            GroupRepresentation groupRepresentation = keycloakAdminClient.realm(keycloakRealm)
+                    .groups().group(groupId.toString()).toRepresentation();
+                groupRepresentation.setName(updatedGroup.getGroupName());
+            groupRepresentation.setName(updatedGroup.getGroupName());
+            keycloakAdminClient.realm(keycloakRealm).groups().group(String.valueOf(groupId)).update(groupRepresentation);
+            logger.info("Updated group with ID: {}", groupId);
+            Group group = mapToGroup(groupRepresentation);
+            return GroupMapper.toGroupResponse(group);
+        }
+        catch (Exception e) {
+            logger.error("Error updating group by ID: {} in Keycloak", groupId, e);
+            throw new RuntimeException("Failed updating group by ID in Keycloak", e);
+        }
+    }
+    public GroupResponse deleteGroupById(UUID groupId) {
+        try {
+            GroupRepresentation groupRepresentation = keycloakAdminClient.realm(keycloakRealm)
+                   .groups().group(String.valueOf(groupId)).toRepresentation();
+            if (groupRepresentation!= null) {
+                keycloakAdminClient.realm(keycloakRealm).groups().group(String.valueOf(groupId)).remove();
+                logger.info("Deleted group with ID: {}", groupId);
+                Group group = mapToGroup(groupRepresentation);
+                return GroupMapper.toGroupResponse(group);
+            } else {
+                logger.warn("Group with ID: {} not found", groupId);
+                return null;
+            }
+        } catch (Exception e) {
+            logger.error("Error deleting group by ID: {} in Keycloak", groupId, e);
+            throw new RuntimeException("Failed deleting group by ID in Keycloak", e);
+        }
+    }
 }

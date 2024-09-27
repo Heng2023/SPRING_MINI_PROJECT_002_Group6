@@ -1,10 +1,11 @@
 package org.example.keycloakadminclient.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.example.keycloakadminclient.model.requestbody.UserRequest;
-import org.example.keycloakadminclient.model.responsebody.ApiResponse;
-import org.example.keycloakadminclient.model.responsebody.UserResponse;
-import org.example.keycloakadminclient.service.UserService;
+import jakarta.validation.Valid;
+import org.example.keycloakadminclient.model.dto.requestbody.UserRequest;
+import org.example.keycloakadminclient.model.dto.responsebody.ApiResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.UserResponse;
+import org.example.keycloakadminclient.service.serviceImp.UserServiceImp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,15 +17,15 @@ import java.util.UUID;
 @SecurityRequirement(name = "spring-app")
 public class UserController {
 
-     private final UserService userService;
+    private final UserServiceImp userServiceImp;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public UserController(UserServiceImp userServiceImp) {
+        this.userServiceImp = userServiceImp;
     }
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<UserResponse>> createUser(@RequestBody UserRequest userRequest) {
-        ApiResponse<UserResponse> response = userService.createUser(
+    public ResponseEntity<ApiResponse<UserResponse>> createUser(@Valid @RequestBody UserRequest userRequest) {
+        ApiResponse<UserResponse> response = userServiceImp.createUser(
                 userRequest.getUsername(),
                 userRequest.getEmail(),
                 userRequest.getFirstName(),
@@ -37,39 +38,40 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable UUID id) {
-        ApiResponse<UserResponse> response = userService.getUserById(id);
+        ApiResponse<UserResponse> response = userServiceImp.getUserById(id);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @GetMapping()
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
-        ApiResponse<List<UserResponse>> response = userService.getAllUsers();
+        ApiResponse<List<UserResponse>> response = userServiceImp.getAllUsers();
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @GetMapping("/username")
     public ResponseEntity<ApiResponse<UserResponse>> getUserByUsername(@RequestParam String username) {
-        ApiResponse<UserResponse> response = userService.getUserByUsername(username);
+        ApiResponse<UserResponse> response = userServiceImp.getUserByUsername(username);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @GetMapping("/email")
     public ResponseEntity<ApiResponse<UserResponse>> getUserByEmail(@RequestParam String email) {
-        ApiResponse<UserResponse> response = userService.getUserByEmail(email);
+        ApiResponse<UserResponse> response = userServiceImp.getUserByEmail(email);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<?>> deleteUser(@PathVariable UUID id) {
-        ApiResponse<?> response = userService.deleteUser(id);
+        ApiResponse<?> response = userServiceImp.deleteUser(id);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> updateUser(
+            @Valid
             @PathVariable UUID id,
             @RequestBody UserRequest updatedUser) {
-        ApiResponse<UserResponse> response = userService.updateUser(id, updatedUser);
+        ApiResponse<UserResponse> response = userServiceImp.updateUser(id, updatedUser);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 }

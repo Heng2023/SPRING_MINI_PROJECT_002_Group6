@@ -24,9 +24,9 @@ public interface FeignUserService {
     ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable("id") String id);
     default ResponseEntity<ApiResponse<UserResponse>> fallbackGetUserById(String id, Throwable throwable) {
         UserResponse userResponse = new UserResponse(UUID.fromString(id),"SunMario",
-                "thy.sopheak098@gmail.com",
-                "Sopheak",
-                "Thy",
+                "fallback-default",
+                "fallback-default",
+                "fallback-default",
                 LocalDate.now(),
                 LocalDate.now());
         return ResponseEntity.status(503)
@@ -36,10 +36,11 @@ public interface FeignUserService {
     }
 
     @GetMapping("/api/v1/group/{groupId}/users")
-    @CircuitBreaker(name = "keycloak-admin-client-2", fallbackMethod = "fallbackUsersByGroup")
+    @CircuitBreaker(name = "keycloak-admin-client-1", fallbackMethod = "fallback")
     ResponseEntity<ApiResponse<UserGroupResponse>> getAllUsersByGroups(@PathVariable UUID groupId);
-    default ResponseEntity<ApiResponse<UserGroupResponse>> fallbackUsersByGroup(UUID groupId, Throwable throwable) {
-        UserGroupResponse userResponse = new UserGroupResponse(groupId,"SunMario",null);
+
+    default ResponseEntity<ApiResponse<UserGroupResponse>>fallback(UUID id, Throwable throwable) {
+        UserGroupResponse userResponse = new UserGroupResponse(id,"Error service",null);
         return ResponseEntity.status(503)
                 .body(ApiResponse.<UserGroupResponse>builder()
                         .message("Service is temporarily unavailable. Please try again later.")

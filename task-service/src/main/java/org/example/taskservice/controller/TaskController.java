@@ -14,6 +14,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/task")
 @SecurityRequirement(name = "spring-app")
 public class TaskController {
+
     private final TaskService taskService;
 
     public TaskController(TaskService taskService) {
@@ -28,6 +29,7 @@ public class TaskController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
     @DeleteMapping("{taskId}")
     public ResponseEntity<ApiResponse<?>> deleteTaskById(@PathVariable UUID taskId){
         ApiResponse<?> response = ApiResponse.builder()
@@ -36,6 +38,7 @@ public class TaskController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
     @PutMapping("{taskId}")
     public ResponseEntity<ApiResponse<?>> updateTaskById(@PathVariable UUID taskId, TaskRequest taskRequest){
         ApiResponse<?> response = ApiResponse.builder()
@@ -44,6 +47,7 @@ public class TaskController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
     @GetMapping("")
     public ResponseEntity<ApiResponse<?>> getAllTasks(int pageNo, int pageSize, String sortBy, String sortDirection){
         ApiResponse<?> response = ApiResponse.builder()
@@ -52,6 +56,7 @@ public class TaskController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
     @PostMapping("")
     public ResponseEntity<ApiResponse<?>> createTask(@RequestBody TaskRequest taskRequest){
         ApiResponse<?> response = ApiResponse.builder()
