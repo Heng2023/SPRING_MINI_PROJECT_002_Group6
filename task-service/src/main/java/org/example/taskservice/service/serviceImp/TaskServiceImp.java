@@ -70,6 +70,7 @@ public class TaskServiceImp implements TaskService {
             task.setDescription(taskRequest.getDescription());
             task.setCreatedBy(taskRequest.getCreatedBy());
             task.setAssignedTo(taskRequest.getAssignedTo());
+            task.setGroupId(taskRequest.getGroupId());
             task.setLastUpdatedAt(LocalDate.now());
         });
         return getTaskById(taskId) ;

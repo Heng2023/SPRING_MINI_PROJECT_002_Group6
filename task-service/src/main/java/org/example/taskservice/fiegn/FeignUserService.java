@@ -36,15 +36,13 @@ public interface FeignUserService {
     }
 
     @GetMapping("/api/v1/group/{groupId}/users")
-    @CircuitBreaker(name = "keycloak-admin-client-2", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "keycloak-admin-client-2", fallbackMethod = "fallbackUsersByGroup")
     ResponseEntity<ApiResponse<UserGroupResponse>> getAllUsersByGroups(@PathVariable UUID groupId);
-    default ResponseEntity<ApiResponse<UserGroupResponse>>fallback(String id, Throwable throwable) {
-        UserResponse userResponse = new UserResponse(UUID.fromString(id),"SunMario",
-                "thy.sopheak098@gmail.com",
-                "Sopheak",
-                "Thy",
-                LocalDate.now(),
-                LocalDate.now());
-        return null;
+    default ResponseEntity<ApiResponse<UserGroupResponse>> fallbackUsersByGroup(UUID groupId, Throwable throwable) {
+        UserGroupResponse userResponse = new UserGroupResponse(groupId,"SunMario",null);
+        return ResponseEntity.status(503)
+                .body(ApiResponse.<UserGroupResponse>builder()
+                        .message("Service is temporarily unavailable. Please try again later.")
+                        .payload(userResponse).build());
     }
 }

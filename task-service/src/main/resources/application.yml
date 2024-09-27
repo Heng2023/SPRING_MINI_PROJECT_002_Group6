@@ -36,7 +36,7 @@ keycloak:
     username: admin
     password: admin
     client-id: keycloak
-    secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
+    secret:
     provider: secret
 
 keycloak-admin:
