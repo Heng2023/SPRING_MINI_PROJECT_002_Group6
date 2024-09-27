@@ -17,7 +17,7 @@ import java.util.UUID;
 @SecurityRequirement(name = "spring-app")
 public class UserController {
 
-     private final UserServiceImp userServiceImp;
+    private final UserServiceImp userServiceImp;
 
     public UserController(UserServiceImp userServiceImp) {
         this.userServiceImp = userServiceImp;
