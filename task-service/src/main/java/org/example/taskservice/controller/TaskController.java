@@ -51,7 +51,9 @@ public class TaskController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<?>> getAllTasks(int pageNo, int pageSize, TaskFields sortBy, SortDirection sortDirection){
+    public ResponseEntity<ApiResponse<?>> getAllTasks(
+            @RequestParam(defaultValue = "1")  int pageNo,
+            @RequestParam(defaultValue = "10")  int pageSize, TaskFields sortBy, SortDirection sortDirection){
         ApiResponse<?> response = ApiResponse.builder()
                 .message("All tasks are found")
                 .payload(taskService.getAllTasks(pageNo,pageSize,sortBy,sortDirection))
