@@ -1,13 +1,15 @@
 package org.example.taskservice.model.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+import java.util.UUID;
+
 @Data
-@Builder
-public class ApiResponse<T> {
-    private String message;
+public class UserGroupResponse {
+    private UUID groupId;
+    private String groupName;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private T payload;
+    private List<UserResponse> userList;
 }

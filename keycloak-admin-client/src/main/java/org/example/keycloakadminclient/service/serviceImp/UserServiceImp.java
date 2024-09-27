@@ -1,9 +1,9 @@
 package org.example.keycloakadminclient.service.serviceImp;
 
 import org.example.keycloakadminclient.model.User;
-import org.example.keycloakadminclient.model.requestbody.UserRequest;
-import org.example.keycloakadminclient.model.responsebody.ApiResponse;
-import org.example.keycloakadminclient.model.responsebody.UserResponse;
+import org.example.keycloakadminclient.model.dto.requestbody.UserRequest;
+import org.example.keycloakadminclient.model.dto.responsebody.ApiResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.UserResponse;
 import org.example.keycloakadminclient.service.UserService;
 import org.example.keycloakadminclient.util.UserMapper;
 import org.keycloak.admin.client.Keycloak;

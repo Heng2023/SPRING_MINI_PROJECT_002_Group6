@@ -1,4 +1,4 @@
-package org.example.keycloakadminclient.model.requestbody;
+package org.example.keycloakadminclient.model.dto.requestbody;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

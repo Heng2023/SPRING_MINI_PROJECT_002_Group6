@@ -2,7 +2,9 @@ package org.example.taskservice.service.serviceImp;
 
 import org.example.taskservice.fiegn.FeignUserService;
 import org.example.taskservice.model.dto.request.TaskRequest;
+import org.example.taskservice.model.dto.response.GroupResponse;
 import org.example.taskservice.model.dto.response.TaskResponse;
+import org.example.taskservice.model.dto.response.UserGroupResponse;
 import org.example.taskservice.model.entity.Task;
 import org.example.taskservice.repository.TaskRepository;
 import org.example.taskservice.service.TaskService;
@@ -20,7 +22,7 @@ import java.util.UUID;
 @Service
 public class TaskServiceImp implements TaskService {
 
-   @Value("${keycloak.auth-server-url}")
+    @Value("${keycloak.auth-server-url}")
     private String keycloakServerUrl;
 
     @Value("${keycloak.realm}")
@@ -32,13 +34,11 @@ public class TaskServiceImp implements TaskService {
     @Value("${keycloak-admin.password}")
     private String keycloakAdminPassword;
 
-    private final Keycloak keycloakAdminClient;
-
     private final FeignUserService userService;
     private final TaskRepository taskRepository;
 
     public TaskServiceImp(Keycloak keycloakAdminClient, FeignUserService userService, TaskRepository taskRepository) {
-        this.keycloakAdminClient = keycloakAdminClient;
+
         this.userService = userService;
         this.taskRepository = taskRepository;
     }
@@ -50,7 +50,7 @@ public class TaskServiceImp implements TaskService {
         return task.toResponse(
                 userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                 userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
-                null
+                groupResponseById(task.getGroupId())
         );
     }
 
@@ -63,6 +63,7 @@ public class TaskServiceImp implements TaskService {
     @Override
     public TaskResponse updateTaskById(UUID taskId, TaskRequest taskRequest) {
         taskRepository.findById(taskId).ifPresent(task -> {
+            task.setGroupId(taskRequest.getGroupId());
             task.setTaskName(taskRequest.getTaskName());
             task.setDescription(taskRequest.getDescription());
             task.setCreatedBy(taskRequest.getCreatedBy());
@@ -85,7 +86,7 @@ public class TaskServiceImp implements TaskService {
                      task.getDescription(),
                      userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                      userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
-                     null,
+                     groupResponseById(task.getGroupId()),
                      task.getCreatedAt(),
                      task.getLastUpdatedAt()));
          }
@@ -101,22 +102,13 @@ public class TaskServiceImp implements TaskService {
         return task.toResponse(
                 userService.getUserById(task.getCreatedBy().toString()).getBody().getPayload(),
                 userService.getUserById(task.getAssignedTo().toString()).getBody().getPayload(),
-null
-//              getGroupById(task.getGroupId())
+                groupResponseById(taskRequest.getGroupId())
         );
     }
 
-//    public GroupResponse getGroupById(UUID groupId) {
-//        RealmResource realmResource = keycloakAdminClient.realm(keycloakRealm);
-//        GroupsResource groupResource = realmResource.groups();
-//        List<GroupRepresentation> groupRepresentationList= groupResource.groups().stream().filter(e-> e.getId().equals(groupId)).toList();
-//
-//        Optional<GroupRepresentation> groupRepresentation = groupResource.groups().stream()
-//                .filter(e -> e.getId().equals(groupId.toString()))  // Filter by groupId
-//                .findFirst();  // Find the first match, if any
-//        groupRepresentation.get();
-//        System.out.println("Id:"+groupRepresentation.get().getId());
-//        System.out.println("Name:"+groupRepresentation.get().getName());
-//               return null;
-//    }
+    public GroupResponse groupResponseById(UUID taskId) {
+       UserGroupResponse userGroupResponse = userService.getAllUsersByGroups(taskId).getBody().getPayload();
+       return new GroupResponse(userGroupResponse.getGroupId(),userGroupResponse.getGroupName());
+    }
+
 }

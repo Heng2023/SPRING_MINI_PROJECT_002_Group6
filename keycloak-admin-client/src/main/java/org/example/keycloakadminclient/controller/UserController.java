@@ -2,9 +2,9 @@ package org.example.keycloakadminclient.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
-import org.example.keycloakadminclient.model.requestbody.UserRequest;
-import org.example.keycloakadminclient.model.responsebody.ApiResponse;
-import org.example.keycloakadminclient.model.responsebody.UserResponse;
+import org.example.keycloakadminclient.model.dto.requestbody.UserRequest;
+import org.example.keycloakadminclient.model.dto.responsebody.ApiResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.UserResponse;
 import org.example.keycloakadminclient.service.serviceImp.UserServiceImp;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

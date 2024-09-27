@@ -1,8 +1,8 @@
 package org.example.keycloakadminclient.service;
 
-import org.example.keycloakadminclient.model.requestbody.UserRequest;
-import org.example.keycloakadminclient.model.responsebody.ApiResponse;
-import org.example.keycloakadminclient.model.responsebody.UserResponse;
+import org.example.keycloakadminclient.model.dto.requestbody.UserRequest;
+import org.example.keycloakadminclient.model.dto.responsebody.ApiResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.UserResponse;
 import java.util.List;
 import java.util.UUID;
 

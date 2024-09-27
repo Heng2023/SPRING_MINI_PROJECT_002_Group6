@@ -1,7 +1,7 @@
 package org.example.keycloakadminclient.util;
 
 import org.example.keycloakadminclient.model.User;
-import org.example.keycloakadminclient.model.responsebody.UserResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.UserResponse;
 import org.keycloak.representations.idm.UserRepresentation;
 
 import java.time.Instant;

@@ -1,6 +1,6 @@
 package org.example.keycloakadminclient.exception;
 
-import org.example.keycloakadminclient.model.responsebody.ApiResponse;
+import org.example.keycloakadminclient.model.dto.responsebody.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
