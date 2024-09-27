@@ -93,7 +93,7 @@ subprojects {
             implementation 'io.github.resilience4j:resilience4j-circuitbreaker'
 
             // Optional: Resilience4j for retry mechanisms
-            implementation 'io.github.resilience4j:resilience4j-retry'
+//            implementation 'io.github.resilience4j:resilience4j-retry'
 
             // Optional: Spring Boot actuator for monitoring
             implementation 'org.springframework.boot:spring-boot-starter-actuator'

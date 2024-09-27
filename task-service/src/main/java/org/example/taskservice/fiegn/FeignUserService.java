@@ -15,18 +15,18 @@ import java.util.UUID;
 
 
 @FeignClient(name = "keycloak-admin-client",
-        url = "http://localhost:8082/",
         configuration = FeignClientInterceptor.class)
 public interface FeignUserService {
 
     @CircuitBreaker(name = "keycloak-admin-client", fallbackMethod = "fallbackGetUserById")
     @GetMapping("/api/v1/user/{id}")
     ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable("id") String id);
+
     default ResponseEntity<ApiResponse<UserResponse>> fallbackGetUserById(String id, Throwable throwable) {
         UserResponse userResponse = new UserResponse(UUID.fromString(id),"SunMario",
-                "thy.sopheak098@gmail.com",
-                "Sopheak",
-                "Thy",
+                "fallback-default",
+                "fallback-default",
+                "fallback-default",
                 LocalDate.now(),
                 LocalDate.now());
         return ResponseEntity.status(503)
@@ -36,15 +36,14 @@ public interface FeignUserService {
     }
 
     @GetMapping("/api/v1/group/{groupId}/users")
-    @CircuitBreaker(name = "keycloak-admin-client-2", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "keycloak-admin-client-1", fallbackMethod = "fallback")
     ResponseEntity<ApiResponse<UserGroupResponse>> getAllUsersByGroups(@PathVariable UUID groupId);
-    default ResponseEntity<ApiResponse<UserGroupResponse>>fallback(String id, Throwable throwable) {
-        UserResponse userResponse = new UserResponse(UUID.fromString(id),"SunMario",
-                "thy.sopheak098@gmail.com",
-                "Sopheak",
-                "Thy",
-                LocalDate.now(),
-                LocalDate.now());
-        return null;
+
+    default ResponseEntity<ApiResponse<UserGroupResponse>>fallback(UUID id, Throwable throwable) {
+        UserGroupResponse userResponse = new UserGroupResponse(id,"Error service",null);
+        return ResponseEntity.status(503)
+                .body(ApiResponse.<UserGroupResponse>builder()
+                        .message("Service is temporarily unavailable. Please try again later.")
+                        .payload(userResponse).build());
     }
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TaskService {
+
     TaskResponse getTaskById(UUID taskId);
 
     TaskResponse deleteTaskById(UUID taskId);

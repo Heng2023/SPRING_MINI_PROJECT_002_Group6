@@ -61,4 +61,42 @@ public class GroupController {
        return ResponseEntity.ok(new ApiResponse<>("Get user by group id " + groupId + " successfully",
                groupService.getUserByGroupId(groupId),HttpStatus.OK,LocalDateTime.now()));
     }
+
+    @GetMapping("/{groupId}")
+    public ResponseEntity<?> getGroupById(@PathVariable UUID groupId) {
+        ApiResponse<Object> response = ApiResponse
+                .builder()
+                .message("Get group by id successful")
+                .payload(groupService.getGroupById(groupId))
+                .dateTime(LocalDateTime.now())
+                .status(HttpStatus.OK)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{groupId}")
+    public ResponseEntity<?> updateGroupById(@PathVariable UUID groupId, @RequestBody GroupRequest updatedGroup) {
+
+        ApiResponse<Object> response = ApiResponse
+                .builder()
+                .message("Update group by id successful")
+                .payload(groupService.updateGroupById(groupId, updatedGroup))
+                .dateTime(LocalDateTime.now())
+                .status(HttpStatus.OK)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+
+    @DeleteMapping("/{groupId}")
+    public ResponseEntity<?> deleteGroupById(@PathVariable UUID groupId) {
+        ApiResponse<Object> response = ApiResponse
+                .builder()
+                .message("Delete group by id successful")
+                .payload(groupService.deleteGroupById(groupId))
+                .status(HttpStatus.OK)
+                .dateTime(LocalDateTime.now())
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }

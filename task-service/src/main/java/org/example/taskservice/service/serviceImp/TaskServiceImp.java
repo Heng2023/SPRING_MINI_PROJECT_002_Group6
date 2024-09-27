@@ -110,5 +110,4 @@ public class TaskServiceImp implements TaskService {
        UserGroupResponse userGroupResponse = userService.getAllUsersByGroups(taskId).getBody().getPayload();
        return new GroupResponse(userGroupResponse.getGroupId(),userGroupResponse.getGroupName());
     }
-
 }
