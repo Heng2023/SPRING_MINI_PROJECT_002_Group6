@@ -1,5 +1,6 @@
 package org.example.taskservice.service.serviceImp;
 
+import jakarta.validation.Valid;
 import org.example.taskservice.exception.NotFoundException;
 import org.example.taskservice.fiegn.FeignUserService;
 import org.example.taskservice.model.dto.request.TaskRequest;
@@ -16,12 +17,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Validated
 @Service
 public class TaskServiceImp implements TaskService {
 
@@ -69,20 +72,23 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public TaskResponse updateTaskById(UUID taskId, TaskRequest taskRequest) {
-        if(!taskRepository.findById(taskId).isPresent()){
-            throw new NotFoundException("Task with id " + taskId + " not found");
-        }
-        taskRepository.findById(taskId).ifPresent(task -> {
-            task.setGroupId(taskRequest.getGroupId());
-            task.setTaskName(taskRequest.getTaskName());
-            task.setDescription(taskRequest.getDescription());
-            task.setCreatedBy(taskRequest.getCreatedBy());
-            task.setAssignedTo(taskRequest.getAssignedTo());
-            task.setGroupId(taskRequest.getGroupId());
-            task.setLastUpdatedAt(LocalDate.now());
-        });
-        return getTaskById(taskId) ;
+    public TaskResponse updateTaskById(UUID taskId, @Valid TaskRequest taskRequest) {
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new NotFoundException("Task with id " + taskId + " not found"));
+
+        // Update the task's fields
+        task.setGroupId(taskRequest.getGroupId());
+        task.setTaskName(taskRequest.getTaskName());
+        task.setDescription(taskRequest.getDescription());
+        task.setCreatedBy(taskRequest.getCreatedBy());
+        task.setAssignedTo(taskRequest.getAssignedTo());
+        task.setLastUpdatedAt(LocalDate.now());
+
+        // Save the updated task entity
+        taskRepository.save(task);
+
+        // Return the updated task response
+        return getTaskById(taskId);
     }
 
     @Override
@@ -106,7 +112,7 @@ public class TaskServiceImp implements TaskService {
     }
 
     @Override
-    public TaskResponse assignNewTask(TaskRequest taskRequest) {
+    public TaskResponse assignNewTask(@Valid TaskRequest taskRequest) {
         taskRequest.toTask(LocalDate.now(),LocalDate.now());
         Task task= taskRepository.save(taskRequest.toTask(LocalDate.now(),LocalDate.now()));
         task.setCreatedAt(LocalDate.now());
@@ -117,6 +123,7 @@ public class TaskServiceImp implements TaskService {
                 groupResponseById(taskRequest.getGroupId())
         );
     }
+
     public GroupResponse groupResponseById(UUID taskId) {
        UserGroupResponse userGroupResponse = userService.getAllUsersByGroups(taskId).getBody().getPayload();
        return new GroupResponse(userGroupResponse.getGroupId(),userGroupResponse.getGroupName());

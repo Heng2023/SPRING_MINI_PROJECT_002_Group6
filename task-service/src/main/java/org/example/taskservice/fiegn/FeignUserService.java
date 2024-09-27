@@ -22,6 +22,7 @@ public interface FeignUserService {
     @CircuitBreaker(name = "keycloak-admin-client", fallbackMethod = "fallbackGetUserById")
     @GetMapping("/api/v1/user/{id}")
     ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable("id") String id);
+
     default ResponseEntity<ApiResponse<UserResponse>> fallbackGetUserById(String id, Throwable throwable) {
         UserResponse userResponse = new UserResponse(UUID.fromString(id),"SunMario",
                 "fallback-default",

@@ -1,88 +1,88 @@
-spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://localhost:8080/realms/project
-          jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
-  application:
-    name: task-service
-
-  datasource:
-    username: postgres
-    password: qwas1234
-    url: jdbc:postgresql://localhost:5436/task
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-
-  cloud:
-    config:
-      enabled: false
-
-server:
-  port: 8083
-
-keycloak:
-  realm: project
-  resource: keycloak
-  auth-server-url: http://localhost:8080/
-  credentials:
-    username: admin
-    password: admin
-    client-id: keycloak
-    secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
-    provider: secret
-
-keycloak-admin:
-  username: admin
-  password: admin
-
-springdoc:
-  swagger-ui:
-    oauth:
-      client-id: keycloak
-      client-secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
-      realm: project
-  api-docs:
-    path: /v3/api-docs/task-service-doc
-
-management:
-  tracing:
-    sampling:
-      probability: 0.5
-
-resilience4j.circuitbreaker:
-  instances:
-    keycloak-admin-client:   # Feign client name
-      registerHealthIndicator: true
-      slidingWindowSize: 10
-      failureRateThreshold: 50
-      waitDurationInOpenState: 3s  # time in ms
-      permittedNumberOfCallsInHalfOpenState: 3
-      minimumNumberOfCalls: 5
-      automaticTransitionFromOpenToHalfOpenEnabled: true
-
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka/
-#  instance:
-#    prefer-ip-address: true
-
-
-
-logging:
-  level:
-    org.springframework.web: debug
-
 #spring:
+#  security:
+#    oauth2:
+#      resourceserver:
+#        jwt:
+#          issuer-uri: http://localhost:8080/realms/project
+#          jwk-set-uri: http://localhost:8080/realms/project/protocol/openid-connect/certs
 #  application:
 #    name: task-service
-#  config:
-#    import: configserver:http://localhost:9090
+#
+#  datasource:
+#    username: postgres
+#    password: qwas1234
+#    url: jdbc:postgresql://localhost:5436/task
+#    driver-class-name: org.postgresql.Driver
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#
+#  cloud:
+#    config:
+#      enabled: false
+#
+#server:
+#  port: 8083
+#
+#keycloak:
+#  realm: project
+#  resource: keycloak
+#  auth-server-url: http://localhost:8080/
+#  credentials:
+#    username: admin
+#    password: admin
+#    client-id: keycloak
+#    secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
+#    provider: secret
+#
+#keycloak-admin:
+#  username: admin
+#  password: admin
+#
+#springdoc:
+#  swagger-ui:
+#    oauth:
+#      client-id: keycloak
+#      client-secret: SvES0qGVzCbxeaVnr1cwmcqZohYwdpxG
+#      realm: project
+#  api-docs:
+#    path: /v3/api-docs/task-service-doc
+#
+#management:
+#  tracing:
+#    sampling:
+#      probability: 0.5
+#
+#resilience4j.circuitbreaker:
+#  instances:
+#    keycloak-admin-client:   # Feign client name
+#      registerHealthIndicator: true
+#      slidingWindowSize: 10
+#      failureRateThreshold: 50
+#      waitDurationInOpenState: 3s  # time in ms
+#      permittedNumberOfCallsInHalfOpenState: 3
+#      minimumNumberOfCalls: 5
+#      automaticTransitionFromOpenToHalfOpenEnabled: true
+#
+##eureka:
+##  client:
+##    service-url:
+##      defaultZone: http://localhost:8761/eureka/
+##  instance:
+##    prefer-ip-address: true
+#
+#
+#
+#logging:
+#  level:
+#    org.springframework.web: debug
+
+spring:
+  application:
+    name: task-service
+  config:
+    import: configserver:http://localhost:9090
