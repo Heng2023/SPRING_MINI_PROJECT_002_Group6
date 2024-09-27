@@ -4,6 +4,8 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.example.taskservice.model.dto.request.TaskRequest;
 import org.example.taskservice.model.dto.response.ApiResponse;
 import org.example.taskservice.service.TaskService;
+import org.example.taskservice.util.SortDirection;
+import org.example.taskservice.util.TaskFields;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +51,7 @@ public class TaskController {
     }
 
     @GetMapping("")
-    public ResponseEntity<ApiResponse<?>> getAllTasks(int pageNo, int pageSize, String sortBy, String sortDirection){
+    public ResponseEntity<ApiResponse<?>> getAllTasks(int pageNo, int pageSize, TaskFields sortBy, SortDirection sortDirection){
         ApiResponse<?> response = ApiResponse.builder()
                 .message("All tasks are found")
                 .payload(taskService.getAllTasks(pageNo,pageSize,sortBy,sortDirection))
